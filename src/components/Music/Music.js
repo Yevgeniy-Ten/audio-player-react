@@ -1,15 +1,20 @@
 import React from 'react';
 import "./Music.css"
 
-const Music = ({audioRef, currentAudio}) => {
+const Music = ({audioRef, currentAudio, audioProgressRef, nextAudio, audioProgressHandle, audioTime, setAudioTime}) => {
     return (
         <div className="Music">
-            <audio ref={audioRef}>
+            <audio onTimeUpdate={() => audioProgressHandle(audioRef.current.currentTime)} onEnded={nextAudio}
+                   onCanPlay={() => setAudioTime(audioRef.current.duration)} ref={audioRef}>
                 <source src={currentAudio.path} type="audio/mp3"/>
             </audio>
+            {audioTime}
             <div className="MusicProgress">
-                {currentAudio.path}
-                <input type="range" min="0" max="100" step="1" className="MusicProgressLine"/>
+                <input ref={audioProgressRef}
+                       onChange={audioProgressHandle} type="range" min="0"
+                       max={currentAudio.time}
+                       step="1"
+                       className="MusicProgressLine"/>
             </div>
         </div>
     )
