@@ -1,12 +1,15 @@
 import React from 'react';
 import "./MusicControls.css"
-import MusicVolume from "./MusicVolume/MusicVolume";
 
-const MusicControls = () => {
+const MusicControls = ({togglePlay, isPlayed}) => {
+    const playBtnClasses = ["MusicBtn PlayBtn"]
+    if (isPlayed) {
+        playBtnClasses.push("stop")
+    }
     return (
         <div className="MusicControls">
             <button className="MusicBtn PrevBtn"></button>
-            <button className="MusicBtn PlayBtn"></button>
+            <button onClick={togglePlay} className={playBtnClasses.join(" ")}></button>
             <button className="MusicBtn NextBtn"></button>
         </div>
     )
