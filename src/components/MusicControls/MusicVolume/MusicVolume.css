@@ -1,0 +1,39 @@
+
+.Volume {
+    position: relative;
+}
+
+.VolumeBtn {
+    background-image: url("../../../design/volume-i.svg");
+}
+
+.VolumeBtn:hover ~ .VolumeProgressWrap {
+    overflow: visible;
+    visibility: visible;
+}
+
+.VolumeProgressWrap:hover {
+    overflow: visible;
+    visibility: visible;
+}
+
+.VolumeProgressWrap {
+    display: flex;
+    justify-content: center;
+    height: 120px;
+    background: #fff;
+    position: absolute;
+    border: 1px solid #ccc;
+    left: 8px;
+    right: 8px;
+    top: 40px;
+    overflow: hidden;
+    visibility: hidden;
+    transition: 0.3s linear;
+    border-radius: 5px;
+}
+
+.VolumeProgressLine {
+    transform: rotate(90deg);
+    width: 100px;
+}

@@ -1,13 +1,16 @@
 import React from 'react';
-import "../MusicControls.css"
+import "./MusicVolume.css"
 
-const MusicVolume = () => {
+const MusicVolume = ({volumeProgressHandle, volumeProgressRef}) => {
     return (
         <div className="Volume">
             <button className="MusicBtn VolumeBtn">
             </button>
             <div className="VolumeProgressWrap">
-                <input type="range" min="0" max="100" className="VolumeProgressLine" step="1"/>
+                <input ref={volumeProgressRef}
+                       onChange={volumeProgressHandle}
+                       type="range" min="0" max="1.0" className="VolumeProgressLine"
+                       step="0.05"/>
             </div>
         </div>
     )
