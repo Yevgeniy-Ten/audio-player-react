@@ -25,7 +25,6 @@ const MusicApp = () => {
             minutes: 0,
         },
         currentTime: 0,
-        audioProgress: 0,
     })
     const [audios, setAudios] = useState([{
         id: 0,
@@ -82,7 +81,6 @@ const MusicApp = () => {
                 minutes: 0,
             },
             currentTime: 0,
-            audioProgress: 0,
         }
     }
     // обработка звука
@@ -95,7 +93,6 @@ const MusicApp = () => {
             return {
                 ...prev,
                 currentTime: audioRef.current.currentTime,
-                audioProgress: audioProgressRef.current.value,
             }
         })
     }
@@ -105,7 +102,6 @@ const MusicApp = () => {
                 return {
                     ...prev,
                     currentTime: audioProgressRef.current.value,
-                    audioProgress: audioProgressRef.current.value,
                 }
             })
         }
