@@ -61,7 +61,6 @@ const MusicApp = () => {
             setCurrentAudio({
                 ...currentAudio,
                 timeIn: {
-                    ...currentAudio.timeIn,
                     seconds: audioRef.current.duration,
                     minutes: secondsInMinutes(audioRef.current.duration),
                 },
