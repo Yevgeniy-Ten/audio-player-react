@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import "./MusicApp.css"
 import MusicControls from "../../components/MusicControls/MusicControls";
 import Music from "../../components/Music/Music";
@@ -7,7 +7,7 @@ import MusicVolume from "../../components/MusicControls/MusicVolume/MusicVolume"
 const secondsInMinutes = (time) => {
     return (time / 60).toFixed(2)
 }
-const MusicApp = (factory, deps) => {
+const MusicApp = () => {
     const [currentAudio, setCurrentAudio] = useState({
         id: 1,
         path: "./musics/LittleKings-This-IsLife.mp3",
@@ -46,6 +46,8 @@ const MusicApp = (factory, deps) => {
         },
     }
     ])
+    const [isLoop, setIsLoop] = useState(false)
+    const [isShuffle, setIsShuffle] = useState(false)
     const [isPlayed, setIsPlayed] = useState(false)
     const audioRef = useRef();
     const audioProgressRef = useRef();
@@ -67,12 +69,30 @@ const MusicApp = (factory, deps) => {
     // установка нового значения ползунка
     useEffect(() => {
         audioProgressRef.current.value = currentAudio.currentTime;
-
     }, [currentAudio.currentTime])
-
+    const audioHandler = (audio) => {
+        return {
+            ...audio,
+            timeIn: {
+                seconds: 0,
+                minutes: 0,
+            },
+            currentTime: 0,
+            audioProgress: 0,
+        }
+    }
     // обработка звука
     const volumeProgressHandle = () => {
         audioRef.current.volume = volumeProgressRef.current.value;
+    }
+    const toggleLoop = () => {
+        if (isLoop) {
+            audioRef.current.loop = false;
+            setIsLoop(prev => !prev)
+        } else {
+            audioRef.current.loop = true;
+            setIsLoop(prev => !prev)
+        }
     }
     // обработка прогресса музыки
     const currentTimeUpdater = () => {
@@ -99,7 +119,7 @@ const MusicApp = (factory, deps) => {
         if (currentAudio.id !== audios[0].id) {
             const prevAudioI = currentAudio.id - 1
             const newCurrAudio = audios[prevAudioI]
-            setCurrentAudio(newCurrAudio)
+            setCurrentAudio(audioHandler(newCurrAudio))
             audioRef.current.src = newCurrAudio.path;
             if (isPlayed) {
                 audioRef.current.play()
@@ -110,7 +130,7 @@ const MusicApp = (factory, deps) => {
         if (currentAudio.id !== audios[audios.length - 1].id) {
             const nextAudioI = currentAudio.id + 1
             const newCurrAudio = audios[nextAudioI]
-            setCurrentAudio(newCurrAudio)
+            setCurrentAudio(audioHandler(newCurrAudio))
             audioRef.current.src = newCurrAudio.path;
             if (isPlayed) {
                 audioRef.current.play()
@@ -133,7 +153,8 @@ const MusicApp = (factory, deps) => {
     return (
         <div className="MusicApp">
             <MusicControls prevAudio={prevAudio} nextAudio={nextAudio}
-                           togglePlay={togglePlay} isPlayed={isPlayed}/>
+                           togglePlay={togglePlay} isPlayed={isPlayed}
+                           toggleLoop={toggleLoop} isLooped={isLoop}/>
             <Music nextAudio={nextAudio}
                    currentTimeUpdater={currentTimeUpdater}
                    audioProgressRef={audioProgressRef}

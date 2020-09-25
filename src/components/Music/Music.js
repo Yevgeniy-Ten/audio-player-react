@@ -5,7 +5,7 @@ import MusicProgress from "../MusicControls/MusicProgress/MusicProgress";
 const Music = ({audioRef, currentAudio, audioProgressRef, nextAudio, currentTimeUpdater,setCurrentTime}) => {
     return (
         <div className="Music">
-            <audio onTimeUpdate={() => currentTimeUpdater()} onEnded={nextAudio}
+            <audio loop={currentAudio.isLoop} onTimeUpdate={() => currentTimeUpdater()} onEnded={nextAudio}
                    ref={audioRef}>
                 <source src={currentAudio.path} type="audio/mp3"/>
             </audio>

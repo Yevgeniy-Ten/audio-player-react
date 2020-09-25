@@ -37,3 +37,15 @@
 .NextBtn {
     background-image: url("../../design/next-i.svg");
 }
+
+.ShuffleBtn {
+    background-image: url("../../design/shuffle-i.svg");
+}
+
+.LoopBtn {
+    background-image: url("../../design/repeat-i.svg");
+}
+
+.LoopBtn.Looped {
+    background-color: red;
+}
