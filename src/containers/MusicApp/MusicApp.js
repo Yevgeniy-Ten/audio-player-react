@@ -192,7 +192,8 @@ const MusicApp = () => {
             <MusicControls prevAudio={prevAudio} nextAudio={nextAudio}
                            togglePlay={togglePlay} isPlayed={isPlayed}
                            toggleLoop={toggleLoop} isLooped={isLoop}
-                           isShuffle={isShuffle} toggleShuffle={toggleShuffle}/>
+                           isShuffle={isShuffle} toggleShuffle={toggleShuffle}
+                           audioPath={currentAudio.path}/>
             <Music nextAudio={nextAudio}
                    currentTimeUpdater={currentTimeUpdater}
                    audioProgressRef={audioProgressRef}

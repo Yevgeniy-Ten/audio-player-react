@@ -1,7 +1,7 @@
 import React from 'react';
 import "./MusicControls.css"
 
-const MusicControls = ({togglePlay, isPlayed, nextAudio, prevAudio, toggleLoop, isLooped, toggleShuffle, isShuffle}) => {
+const MusicControls = ({togglePlay, isPlayed, nextAudio, prevAudio, toggleLoop, isLooped, toggleShuffle, isShuffle,audioPath}) => {
     const playBtnClasses = ["MusicBtn", "PlayBtn"]
     if (isPlayed) {
         playBtnClasses.push("stop")
@@ -21,6 +21,7 @@ const MusicControls = ({togglePlay, isPlayed, nextAudio, prevAudio, toggleLoop, 
             <button onClick={nextAudio} className="MusicBtn NextBtn"></button>
             <button onClick={toggleLoop} className={loopBtnClasses.join(" ")}></button>
             <button onClick={toggleShuffle} className={shuffleBtnClasses.join(" ")}></button>
+            <a title="скачать" href={audioPath} download className="MusicBtn DownloadBtn"></a>
         </div>
     )
 }

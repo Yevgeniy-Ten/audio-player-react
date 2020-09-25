@@ -49,3 +49,8 @@
 .BtnActive {
     background-color: red;
 }
+
+.DownloadBtn {
+    background-image: url("../../design/download-i.svg");
+    background-size: contain;
+}
