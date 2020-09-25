@@ -46,6 +46,6 @@
     background-image: url("../../design/repeat-i.svg");
 }
 
-.LoopBtn.Looped {
+.BtnActive {
     background-color: red;
 }

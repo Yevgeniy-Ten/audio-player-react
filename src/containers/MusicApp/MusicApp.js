@@ -7,13 +7,18 @@ import MusicVolume from "../../components/MusicControls/MusicVolume/MusicVolume"
 const secondsInMinutes = (time) => {
     return (time / 60).toFixed(2)
 }
+const getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 const MusicApp = () => {
     const [currentAudio, setCurrentAudio] = useState({
         id: 1,
-        path: "./musics/LittleKings-This-IsLife.mp3",
+        path: "./musics/RivalfeatBryanFinlayWalls.mp3",
         info: {
-            author: "Little Kings",
-            name: "This is Life"
+            author: "Rival feat BryanFinlay",
+            name: "Walls"
         },
         timeIn: {
             seconds: 0,
@@ -29,20 +34,19 @@ const MusicApp = () => {
             author: "Dunisco",
             name: "Heaven in the heartbreak"
         },
-        timeIn: {
-            seconds: 0,
-            minutes: 0,
-        },
     }, {
         id: 1,
-        path: "./musics/LittleKings-This-IsLife.mp3",
+        path: "./musics/RivalfeatBryanFinlayWalls.mp3",
         info: {
-            author: "Little Kings",
-            name: "This is Life"
+            author: "Rival feat BryanFinlay",
+            name: "Walls"
         },
-        timeIn: {
-            seconds: 0,
-            minutes: 0,
+    }, {
+        id: 2,
+        path: "./musics/ОкейТимаБелорусских.mp3",
+        info: {
+            author: "Тима белорууских",
+            name: "Окей"
         },
     }
     ])
@@ -85,15 +89,6 @@ const MusicApp = () => {
     const volumeProgressHandle = () => {
         audioRef.current.volume = volumeProgressRef.current.value;
     }
-    const toggleLoop = () => {
-        if (isLoop) {
-            audioRef.current.loop = false;
-            setIsLoop(prev => !prev)
-        } else {
-            audioRef.current.loop = true;
-            setIsLoop(prev => !prev)
-        }
-    }
     // обработка прогресса музыки
     const currentTimeUpdater = () => {
         setCurrentAudio((prev) => {
@@ -116,7 +111,22 @@ const MusicApp = () => {
         }
     }
     const prevAudio = () => {
-        if (currentAudio.id !== audios[0].id) {
+        if (isShuffle) {
+            let newAudioI = null;
+            while (true) {
+                const newI = getRandomInt(0, audios.length)
+                if (newI !== currentAudio.id) {
+                    newAudioI = newI;
+                    break;
+                }
+            }
+            const newCurrAudio = audios[newAudioI]
+            setCurrentAudio(audioHandler(newCurrAudio))
+            audioRef.current.src = newCurrAudio.path;
+            if (isPlayed) {
+                audioRef.current.play()
+            }
+        } else if (currentAudio.id !== audios[0].id) {
             const prevAudioI = currentAudio.id - 1
             const newCurrAudio = audios[prevAudioI]
             setCurrentAudio(audioHandler(newCurrAudio))
@@ -127,7 +137,22 @@ const MusicApp = () => {
         }
     }
     const nextAudio = () => {
-        if (currentAudio.id !== audios[audios.length - 1].id) {
+        if (isShuffle) {
+            let newAudioI = null;
+            while (true) {
+                const newI = getRandomInt(0, audios.length)
+                if (newI !== currentAudio.id) {
+                    newAudioI = newI;
+                    break;
+                }
+            }
+            const newCurrAudio = audios[newAudioI]
+            setCurrentAudio(audioHandler(newCurrAudio))
+            audioRef.current.src = newCurrAudio.path;
+            if (isPlayed) {
+                audioRef.current.play()
+            }
+        } else if (currentAudio.id !== audios[audios.length - 1].id) {
             const nextAudioI = currentAudio.id + 1
             const newCurrAudio = audios[nextAudioI]
             setCurrentAudio(audioHandler(newCurrAudio))
@@ -138,6 +163,18 @@ const MusicApp = () => {
         } else if (isPlayed) {
             audioRef.current.pause()
             setIsPlayed(prev => !prev)
+        }
+    }
+    const toggleShuffle = () => {
+        setIsShuffle(prev => !prev)
+    }
+    const toggleLoop = () => {
+        if (isLoop) {
+            audioRef.current.loop = false;
+            setIsLoop(prev => !prev)
+        } else {
+            audioRef.current.loop = true;
+            setIsLoop(prev => !prev)
         }
     }
     const togglePlay = () => {
@@ -154,7 +191,8 @@ const MusicApp = () => {
         <div className="MusicApp">
             <MusicControls prevAudio={prevAudio} nextAudio={nextAudio}
                            togglePlay={togglePlay} isPlayed={isPlayed}
-                           toggleLoop={toggleLoop} isLooped={isLoop}/>
+                           toggleLoop={toggleLoop} isLooped={isLoop}
+                           isShuffle={isShuffle} toggleShuffle={toggleShuffle}/>
             <Music nextAudio={nextAudio}
                    currentTimeUpdater={currentTimeUpdater}
                    audioProgressRef={audioProgressRef}
