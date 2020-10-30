@@ -3,7 +3,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    padding: 15px;
+    padding: 14px;
     border: none;
     transition: 0.2s;
     margin: 10px;
@@ -46,11 +46,10 @@
     background-image: url("../../design/repeat-i.svg");
 }
 
-.BtnActive {
-    background-color: red;
-}
-
 .DownloadBtn {
     background-image: url("../../design/download-i.svg");
     background-size: contain;
+}
+.active {
+    background-color: red;
 }

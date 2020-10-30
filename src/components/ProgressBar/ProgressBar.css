@@ -1,0 +1,9 @@
+.ProgressBar {
+    display: flex;
+    align-items: center;
+}
+
+.ProgressBarLine {
+    width: 100%;
+    height: 4px;
+}

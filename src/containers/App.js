@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import MusicApp from "./MusicApp/MusicApp";
 
 function App() {

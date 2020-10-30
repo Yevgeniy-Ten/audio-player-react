@@ -1,203 +1,158 @@
 import React, {useEffect, useRef, useState} from 'react';
 import "./MusicApp.css"
-import MusicControls from "../../components/MusicControls/MusicControls";
 import Music from "../../components/Music/Music";
-import MusicVolume from "../../components/MusicControls/MusicVolume/MusicVolume";
+import {getRandomInt} from "../../assets/assets";
 
-const secondsInMinutes = (time) => {
-    return (time / 60).toFixed(2)
-}
-const getRandomInt = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
+
 const MusicApp = () => {
-    const [currentAudio, setCurrentAudio] = useState({
-        id: 1,
-        path: "./musics/RivalfeatBryanFinlayWalls.mp3",
-        info: {
-            author: "Rival feat BryanFinlay",
-            name: "Walls"
-        },
-        timeIn: {
-            seconds: 0,
-            minutes: 0,
-        },
-        currentTime: 0,
-    })
-    const [audios, setAudios] = useState([{
+    const audios = [{
         id: 0,
-        path: "./musics/dunisco_heaven_in_the_heartbreak.mp3",
-        info: {
-            author: "Dunisco",
-            name: "Heaven in the heartbreak"
-        },
+        path: "./musics/dunisco.mp3",
+        title: "Dunisco - Heaven in the heartbreak",
     }, {
         id: 1,
         path: "./musics/RivalfeatBryanFinlayWalls.mp3",
-        info: {
-            author: "Rival feat BryanFinlay",
-            name: "Walls"
-        },
+        title: "Rival feat BryanFinlay - Walls",
     }, {
         id: 2,
         path: "./musics/ОкейТимаБелорусских.mp3",
-        info: {
-            author: "Тима белорууских",
-            name: "Окей"
-        },
-    }
-    ])
+        title: "Тима Белорусских - Окей",
+    }]
+    const [audio, setAudio] = useState({
+        id: 0,
+        path: "./musics/dunisco.mp3",
+        title: "Dunisco - Heaven in the heartbreak",
+    })
     const [isLoop, setIsLoop] = useState(false)
     const [isShuffle, setIsShuffle] = useState(false)
     const [isPlayed, setIsPlayed] = useState(false)
     const audioRef = useRef();
-    const audioProgressRef = useRef();
-    const volumeProgressRef = useRef();
+    const progressRef = useRef()
+    const volumeRef = useRef();
     useEffect(() => {
-        // следим чтобы устанавливать привычное отображение трека
-        audioRef.current.oncanplay = function () {
-            setCurrentAudio({
-                ...currentAudio,
-                timeIn: {
-                    seconds: audioRef.current.duration,
-                    minutes: secondsInMinutes(audioRef.current.duration),
-                },
-                currentTime: 0,
-            })
+        audioRef.current.ondurationchange = () => {
+            setAudioTime(audioRef.current.duration)
         }
-    }, [currentAudio.path])
-    // установка нового значения ползунка
-    useEffect(() => {
-        audioProgressRef.current.value = currentAudio.currentTime;
-    }, [currentAudio.currentTime])
-    const audioHandler = (audio) => {
-        return {
-            ...audio,
-            timeIn: {
-                seconds: 0,
-                minutes: 0,
-            },
-            currentTime: 0,
+        audioRef.current.ontimeupdate = () => {
+            progressBarUpdate()
         }
+        // eslint-disable-next-line
+    }, [audio])
+    // Отображение времени
+    const setAudioTime = (time) => {
+        const audioCopy = {...audio}
+        audioCopy.time = time
+        setAudio(audioCopy)
     }
-    // обработка звука
-    const volumeProgressHandle = () => {
-        audioRef.current.volume = volumeProgressRef.current.value;
+    // Прогресс бар
+    const progressBarUpdate = () => {
+        progressRef.current.value = audioRef.current.currentTime
     }
-    // обработка прогресса музыки
-    const currentTimeUpdater = () => {
-        setCurrentAudio((prev) => {
-            return {
-                ...prev,
-                currentTime: audioRef.current.currentTime,
-            }
-        })
+    const onProgressChange = () => {
+        audioRef.current.currentTime = progressRef.current.value
     }
-    const setCurrentTime = () => {
-        if (currentAudio.audioProgress !== audioProgressRef.current.value) {
-            setCurrentAudio((prev) => {
-                return {
-                    ...prev,
-                    currentTime: audioProgressRef.current.value,
-                }
-            })
-        }
-    }
-    const prevAudio = () => {
-        if (isShuffle) {
-            let newAudioI = null;
-            while (true) {
-                const newI = getRandomInt(0, audios.length)
-                if (newI !== currentAudio.id) {
-                    newAudioI = newI;
-                    break;
-                }
-            }
-            const newCurrAudio = audios[newAudioI]
-            setCurrentAudio(audioHandler(newCurrAudio))
-            audioRef.current.src = newCurrAudio.path;
-            if (isPlayed) {
-                audioRef.current.play()
-            }
-        } else if (currentAudio.id !== audios[0].id) {
-            const prevAudioI = currentAudio.id - 1
-            const newCurrAudio = audios[prevAudioI]
-            setCurrentAudio(audioHandler(newCurrAudio))
-            audioRef.current.src = newCurrAudio.path;
-            if (isPlayed) {
-                audioRef.current.play()
-            }
-        }
-    }
-    const nextAudio = () => {
-        if (isShuffle) {
-            let newAudioI = null;
-            while (true) {
-                const newI = getRandomInt(0, audios.length)
-                if (newI !== currentAudio.id) {
-                    newAudioI = newI;
-                    break;
-                }
-            }
-            const newCurrAudio = audios[newAudioI]
-            setCurrentAudio(audioHandler(newCurrAudio))
-            audioRef.current.src = newCurrAudio.path;
-            if (isPlayed) {
-                audioRef.current.play()
-            }
-        } else if (currentAudio.id !== audios[audios.length - 1].id) {
-            const nextAudioI = currentAudio.id + 1
-            const newCurrAudio = audios[nextAudioI]
-            setCurrentAudio(audioHandler(newCurrAudio))
-            audioRef.current.src = newCurrAudio.path;
-            if (isPlayed) {
-                audioRef.current.play()
-            }
-        } else if (isPlayed) {
-            audioRef.current.pause()
-            setIsPlayed(prev => !prev)
-        }
-    }
-    const toggleShuffle = () => {
-        setIsShuffle(prev => !prev)
-    }
-    const toggleLoop = () => {
-        if (isLoop) {
-            audioRef.current.loop = false;
-            setIsLoop(prev => !prev)
-        } else {
-            audioRef.current.loop = true;
-            setIsLoop(prev => !prev)
-        }
-    }
-    const togglePlay = () => {
+    // Включение выключение
+    const onPlay = () => {
         if (isPlayed) {
             audioRef.current.pause()
             setIsPlayed(prev => !prev)
+            return;
+        }
+        audioRef.current.play()
+        setIsPlayed(prev => !prev)
+    }
+    // Громкость
+    const volumeHandle = () => {
+        audioRef.current.volume = volumeRef.current.value;
+    }
+    // Повтор трека задаёёт
+    const onLoop = () => {
+        if (isLoop) {
+            // audioRef.current.loop = false;
+            setIsLoop(false)
+            return;
+        }
+        // audioRef.current.loop = true;
+        setIsLoop(true)
+    }
+    const onShuffle = () => {
+        setIsShuffle(!isShuffle)
+    }
+    // обработка звука
+
+
+    // Предудыщий трек
+    const onPrev = () => {
+        let newAudioIndex = null;
+        if (isShuffle) {
+            while (true) {
+                const randomI = getRandomInt(0, audios.length)
+                if (randomI !== audio.id) {
+                    newAudioIndex = randomI
+                    break;
+                }
+            }
         } else {
-            audioRef.current.currentTime = currentAudio.currentTime
+            const isFirstAudio = audio.id === 0
+            if (isFirstAudio) {
+                const lastAudioIndex = audios[audios.length - 1].id
+                newAudioIndex = lastAudioIndex
+            } else {
+                newAudioIndex = audio.id - 1
+            }
+        }
+        const newAudio = audios[newAudioIndex]
+        setAudio(newAudio)
+        audioRef.current.src = newAudio.path
+        if (isPlayed) {
             audioRef.current.play()
-            setIsPlayed(prev => !prev)
         }
     }
+    // Следующий трек
+    const onNext = () => {
+        let newAudioIndex = null;
+        if (isShuffle) {
+            while (true) {
+                const randomI = getRandomInt(0, audios.length)
+                if (randomI !== audio.id) {
+                    newAudioIndex = randomI
+                    break;
+                }
+            }
+        } else {
+            const lastAudio = audios[audios.length - 1]
+            const isLastAudio = audio.id === lastAudio.id
+            if (isLastAudio) {
+                newAudioIndex = 0
+            } else {
+                newAudioIndex = audio.id + 1
+            }
+        }
+        const newAudio = audios[newAudioIndex]
+        setAudio(newAudio)
+        audioRef.current.src = newAudio.path
+        if (isPlayed) {
+            audioRef.current.play()
+        }
+    }
+
     return (
-        <div className="MusicApp">
-            <MusicControls prevAudio={prevAudio} nextAudio={nextAudio}
-                           togglePlay={togglePlay} isPlayed={isPlayed}
-                           toggleLoop={toggleLoop} isLooped={isLoop}
-                           isShuffle={isShuffle} toggleShuffle={toggleShuffle}
-                           audioPath={currentAudio.path}/>
-            <Music nextAudio={nextAudio}
-                   currentTimeUpdater={currentTimeUpdater}
-                   audioProgressRef={audioProgressRef}
-                   audioRef={audioRef}
-                   currentAudio={currentAudio}
-                   setCurrentTime={setCurrentTime}
-            />
-            <MusicVolume volumeProgressRef={volumeProgressRef} volumeProgressHandle={volumeProgressHandle}/>
-        </div>
+        <>
+            <audio loop={isLoop}
+                   ref={audioRef}
+                   onEnded={onNext}>
+                <source src={audio.path} type="audio/mp3"/>
+            </audio>
+            <div className="MusicApp">
+                <Music onProgressChange={onProgressChange} onShuffle={onShuffle} onPrev={onPrev} onNext={onNext}
+                       isShuffle={isShuffle} onLoop={onLoop}
+                       isLoop={isLoop} isPlayed={isPlayed}
+                       audio={audio} onPlay={onPlay}
+                       volumeHandle={volumeHandle}
+                       volumeRef={volumeRef}
+                       progressRef={progressRef}/>
+            </div>
+        </>
     )
 }
 export default MusicApp;

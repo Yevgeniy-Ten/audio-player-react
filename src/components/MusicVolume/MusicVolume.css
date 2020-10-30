@@ -1,10 +1,9 @@
-
 .Volume {
     position: relative;
 }
 
 .VolumeBtn {
-    background-image: url("../../../design/volume-i.svg");
+    background-image: url("../../design/volume-i.svg");
 }
 
 .VolumeBtn:hover ~ .VolumeProgressWrap {
